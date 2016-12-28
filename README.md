@@ -31,7 +31,7 @@ outputFile = outputFile.substr(0, outputFile.lastIndexOf(".")) + ".json";
 parser.parseOcn(sourceBookURL, terms.replaceWithIPN) 
   .then(aligner.align(this.blocks, sourceAudioURL, consoleLogResults))
   .then(
-    fs.writeFile(outputFile,JSON.stringify({
+    fs.writeFile(outputFile, JSON.stringify({
       source: sourceBookURL, audioSource: sourceAudioURL, 
       alignData: this.alignData
     }))); 
