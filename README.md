@@ -25,9 +25,8 @@ var aligner = require('irls-audio-aligner-interface').connect(API_URL, API_KEY);
 var parser = require('book-parser'); 
 var terms = require('bahai-terms');
 
-var outputFile = path.basename(sourceBookURL);
-outputFile = outputFile.substr(0, outputFile.lastIndexOf(".")) + ".json";
 // parse HTML file from URL with a function to modify content (replacing each term with IPN equivilant) 
+var outputFile = path.basename(sourceBookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
 parser.parseOcn(bookURL, terms.replaceWithIPN) 
   .then(aligner.align(this.blocks, audioURL))
   .then(
