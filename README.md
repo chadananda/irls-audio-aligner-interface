@@ -26,7 +26,7 @@ var parser = require('book-parser');
 var terms = require('bahai-terms');
 
 // parse HTML file from URL with a function to modify content (replacing each term with IPN equivilant) 
-var outputFile = path.basename(sourceBookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
+var outputFile = path.basename(bookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
 parser.parseOcn(bookURL, terms.replaceWithIPN) 
   .then(aligner.align(this.blocks, audioURL))
   .then(
