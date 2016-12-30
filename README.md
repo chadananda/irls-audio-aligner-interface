@@ -36,3 +36,10 @@ parser.parseOcn(bookURL, terms.replaceWithIPN)
     }))); 
   );
 ```
+
+### Todo:
+
+* Select module for managing API request promises
+* Select module for managing passwords from config or env
+* Create Parser and Terms modules
+* Publish test iteration of service for testing
