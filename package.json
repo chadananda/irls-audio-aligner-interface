@@ -1,8 +1,8 @@
 {
   "name": "irls-audio-aligner-interface",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Interface module to utilize IRLS audio aligner service",
-  "main": "index.js",
+  "main": "aligner.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
