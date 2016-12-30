@@ -1,14 +1,15 @@
-# irls-audio-aligner-interface
-Node module interface for accessing the irls-audio-aligner service
+# IRLS-audio-aligner-interface
+Node module interface for accessing the irls-audio-aligner service.  
+**This is a module wrapper for a proprietary webservice. To use, you will need an API endpoint URL and an API Key.**
 
-### To use, you will need an API endpoint URL and an API Key
+ 
 
-### Simply install the interface module with:
+### Install the interface module into your node project with:
 ``` 
 npm install --save irls-audio-aligner-interface
 ```
 
-### Example implementation of IRLS Aligner Service:
+### Example implementation:
 ``` Javascript
 // location of Aligner Service and API key
 var API_URL = '';
