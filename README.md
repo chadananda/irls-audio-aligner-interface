@@ -21,21 +21,28 @@ var audioURL = 'https://ocean-books-audio.s3.amazonaws.com/abd-tn-en-bahiyyih-na
 
 var fs = require('fs');
 var path = require('path');
+var request = require('pro-request');
 
 var aligner = require('irls-audio-aligner-interface').connect(API_URL, API_KEY); 
-var parser = require('book-parser'); 
+var parser = require('ocnparse'); 
 var terms = require('bahai-terms');
 
 // parse HTML file from URL with a function to modify content (replacing each term with IPN equivilant) 
 var outputFile = path.basename(bookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
-parser.parseOcn(bookURL, terms.replaceWithIPN) 
-  .then(aligner.align(this.blocks, audioURL))
+request.get(bookURL)
+  .then( 
+    return parser.blockLevelRebuild(parser.tokenize(this.data).map(terms.replaceWithIPN));
+  )
   .then(
-    fs.writeFile(outputFile, JSON.stringify({
+    return aligner.alignRequest(this.blocks, audioURL)
+  )
+  .then(
+    return fs.writeFile(outputFile, JSON.stringify({
       source: bookURL, audioSource: audioURL, 
       alignData: this.alignData
-    }))); 
-  );
+    }))
+  ); 
+);
 ```
 
 ### Todo:
