@@ -1,6 +1,6 @@
 {
   "name": "irls-audio-aligner-interface",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Interface module to utilize IRLS audio aligner service",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "firm-foundation",
     "ocean"
   ],
-  "author": "Chad Jones <chadananda@gmail.com> (http://bahai-education.org/)",
+  "author": "Chad Jones <chadananda@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/chadananda/irls-audio-aligner-interface/issues"
