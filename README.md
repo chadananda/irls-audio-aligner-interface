@@ -21,26 +21,40 @@ var audioURL = 'https://ocean-books-audio.s3.amazonaws.com/abd-tn-en-bahiyyih-na
 
 var fs = require('fs');
 var path = require('path');
-var request = require('pro-request');
+var request = require('pro-request'); // request module with promises
 
 var aligner = require('irls-audio-aligner-interface').connect(API_URL, API_KEY); 
 var parser = require('ocnparse'); 
 var terms = require('bahai-terms');
 
 // parse HTML file from URL with a function to modify content (replacing each term with IPN equivilant) 
-var outputFile = path.basename(bookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
 request.get(bookURL)
   .then( 
-    return parser.blockLevelRebuild(parser.tokenize(this.data).map(terms.replaceWithIPN));
+    // parse book and replace Baha'i terms with IPN Tokens
+    var data = parser.tokenize(this.data).map(terms.replaceWithIPN)
+    data = parser.blockLevelRebuild(source); 
+    
+    // put everything together into a task object 
+    var task = {
+      lang: 'en-un', 
+      voice: 'mail',
+      source: data,
+      audioSource: audioURL,
+      mapPoints: {}
+    };
+    // send task to alignment service
+    return aligner.alignRequest(task);
   )
   .then(
-    return aligner.alignRequest(this.blocks, audioURL)
-  )
-  .then(
+    // save the alignment JSON file with the source file name
+    var outputFile = path.basename(bookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
     return fs.writeFile(outputFile, JSON.stringify({
       source: bookURL, audioSource: audioURL, 
       alignData: this.alignData
     }))
+  )
+  .then(
+    console.log('Alignment file complete. Written out as "'+outputFile+'"');
   ); 
 );
 ```
