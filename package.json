@@ -25,6 +25,7 @@
   "homepage": "https://github.com/chadananda/irls-audio-aligner-interface#readme",
   "dependencies": {
     "pro-request": "^2.2.3",
-    "cheerio": "0.22.0"
+    "cheerio": "0.22.0",
+    "request": "2.79.0"
   }
 }

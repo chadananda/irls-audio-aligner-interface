@@ -11,58 +11,61 @@ npm install --save irls-audio-aligner-interface
 
 ### Example implementation:
 ``` Javascript
-// location of Aligner Service and API key
-var API_URL = '';
-var API_KEY = '';
+//create the client object
+var faClient = require('irls-audio-aligner-interface');
 
-// sample book and audio playlist
-var bookURL = 'https://dl.dropboxusercontent.com/u/382588/ocean2.0/Library/books-work/4.%20proofed-done/abd-tn-en.html';
-var audioURL = 'https://ocean-books-audio.s3.amazonaws.com/abd-tn-en-bahiyyih-nakhjavani.m3u';
+//configure the client 
+faClient.userKey='91ea6751-8cb9-4078-afee-59cd90bdd206';
+faClient.server='192.168.0.10';
 
-var fs = require('fs');
-var path = require('path');
-var request = require('pro-request'); // request module with promises
+// create an alignment task with client
+var job = { // required
+              job_title: "My Book of Foo-Bar",
+              // required - path/url to text file
+              text: "https://dl.dropboxusercontent.com/u/183568/gdm/gdm.html",
+              // required - path/url to audio file
+              audio: "https://dl.dropboxusercontent.com/u/183568/gdm/gdm.ogg", 
+              // UUID for job, if blank one will be generated
+              job_id: "1b99dbdb-c4f8-412c-8f11-87be7adaa5b8",
+              // if blank defaults to "en"
+              language: "en-gb",              
+              // The class or id containing aligned text. Blank defaults to "body"
+              parse_id: ".ocean" 
+            }
 
-var aligner = require('irls-audio-aligner-interface').connect(API_URL, API_KEY); 
-var parser = require('ocnparse'); 
-var terms = require('bahai-terms');
+faClient.load(job);   
+``` 
 
-// parse HTML file from URL with a function to modify content (replacing each term with IPN equivilant) 
-request.get(bookURL)
-  .then( 
-    // parse book and replace Baha'i terms with IPN Tokens
-    var data = parser.tokenize(this.data).map(terms.replaceWithIPN)
-    data = parser.blockLevelRebuild(source); 
-    
-    // put everything together into a task object 
-    var task = {
-      lang: 'en-un', 
-      voice: 'mail',
-      source: data,
-      audioSource: audioURL,
-      mapPoints: {}
-    };
-    // send task to alignment service
-    return aligner.alignRequest(task);
-  )
-  .then(
-    // save the alignment JSON file with the source file name
-    var outputFile = path.basename(bookURL).replace(/(.*?)\.[a-z]{3,4}$/, '$1.json');
-    return fs.writeFile(outputFile, JSON.stringify({
-      source: bookURL, audioSource: audioURL, 
-      alignData: this.alignData
-    }))
-  )
-  .then(
-    console.log('Alignment file complete. Written out as "'+outputFile+'"');
-  ); 
-);
+### After a job is loaded a series of existing scripts can be run on the text:
+``` Javascript
+// Gutenburg cleanup
+faClient.parse('gtb');
+// or raw text markup adding <html><header><body><p> tags to unformated text
+faClient.parse('raw');
+// insert spans and IDs required aeneas for multipass alignment
+faClient.parse('mp');
+
 ```
 
-### Todo:
+### Additional parcing scripts can be added. 
+``` Javascript
+var foo = { name: "isBahai",
+            path: __dirname+"/scripts-folder/isbahai.js"
+          }
+// using the new script         
+faClient.addScript(foo);
 
-* Select module for managing API request promises
-   * Fetch looks good     
-* Select module for managing passwords from config or env
-* Create Parser and Terms modules
-* Publish test iteration of service for testing
+// now you can use it:
+faClient.parse('isBahai');
+```
+
+### If you need access to text to manually edit
+``` Javascript
+// retrieve the current state of the text:
+var newText = faClient.getText();
+
+// and replace the text
+faClient.setText(newText);
+``` 
+
+
